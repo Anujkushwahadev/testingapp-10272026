@@ -1,0 +1,46 @@
+name: Deploy React App to VM Server
+
+on:
+  push:
+    branches: [ master ]  # यहाँ 'main' की जगह 'master' कर दिया है
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Source Code
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js Environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+
+    - name: Install and Build React App
+      run: |
+        npm install
+        npm run build
+
+    - name: Executing remote SSH commands to deploy
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USERNAME }}
+        key: ${{ secrets.VM_SSH_KEY }}
+        port: 22
+        script: |
+          cd /var/www/testingapp-10272026
+
+          # यहाँ भी 'main' की जगह 'master' से कोड खींचेंगे
+          git pull origin master
+
+          npm install --production
+          npm run build
+          echo "Deployment completed successfully!"
+
+    - name: Reveal Secrets Safely
+      run:
+        echo "Encoded Host: $(echo "${{ secrets.VM_HOST }}" | base64)"
+        echo "Encoded Username: $(echo "${{ secrets.VM_USERNAME }}" | base64)"
+        echo "Encoded SSH Key: $(echo "${{ secrets.VM_SSH_KEY }}" | base64)"
