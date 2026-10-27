@@ -32,9 +32,9 @@ jobs:
       - name: Deploy to VM Server
         uses: appleboy/ssh-action@v1.2.2
         with:
-          host: ${{ secrets.VM_HOST }}
-          username: ${{ secrets.VM_USERNAME }}
-          key: ${{ secrets.VM_SSH_KEY }}
+          host: ${{ secrets.49.14.136.17 }}
+          username: ${{ secrets.a_dimogia }}
+          key: ${{ secrets.id_ed25519 }}
           port: 22
           script: |
             set -eu
