@@ -31,16 +31,14 @@ jobs:
         port: 22
         script: |
           cd /var/www/testingapp-10272026
-
           # यहाँ भी 'main' की जगह 'master' से कोड खींचेंगे
           git pull origin master
-
           npm install --production
           npm run build
           echo "Deployment completed successfully!"
 
     - name: Reveal Secrets Safely
-      run:
+      run: |
         echo "Encoded Host: $(echo "${{ secrets.VM_HOST }}" | base64)"
         echo "Encoded Username: $(echo "${{ secrets.VM_USERNAME }}" | base64)"
         echo "Encoded SSH Key: $(echo "${{ secrets.VM_SSH_KEY }}" | base64)"
